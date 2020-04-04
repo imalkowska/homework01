@@ -14,6 +14,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
+    global metoda
     metoda = 'GET'
     return {"message": "Hello World during the coronavirus pandemic!"}
 
@@ -27,6 +28,7 @@ class GiveMeSomethingResp(BaseModel):
 
 @app.post("/", response_model=GiveMeSomethingResp)
 def receive_something(rq: GiveMeSomethingRq):
+    global metoda
 	metoda = 'POST'
 	return GiveMeSomethingResp(received=rq.dict())
 
