@@ -29,8 +29,8 @@ class GiveMeSomethingResp(BaseModel):
 @app.post("/", response_model=GiveMeSomethingResp)
 def receive_something(rq: GiveMeSomethingRq):
     global metoda
-	metoda = 'POST'
-	return GiveMeSomethingResp(received=rq.dict())
+    metoda = 'POST'
+    return GiveMeSomethingResp(received=rq.dict())
 
 @app.get('/method')
 def read_method():
