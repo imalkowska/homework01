@@ -24,6 +24,6 @@ class GiveMeSomethingResp(BaseModel):
     received: dict
     constant_data: str = "POST"
 
-@app.post("/method", response_model=GiveMeSomethingResp)
+@app.post("/", response_model=GiveMeSomethingResp)
 def receive_something(rq: GiveMeSomethingRq):
 	return GiveMeSomethingResp(received=rq.dict())
