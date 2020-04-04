@@ -9,10 +9,12 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+app.metoda = ''
+
+
 @app.get("/")
 def root():
-    global metoda
-    metoda = 'GET'
+    app.metoda = 'GET'
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 # class GiveMeSomethingRq(BaseModel):
@@ -31,10 +33,9 @@ def root():
 
 @app.post("/")
 def read_post():
-    global metoda
-    metoda = 'POST'
+    app.metoda = 'POST'
     return {"message": " pandemic!"}
 
 @app.get('/method')
 def read_method():
-    return {'method': metoda}
+    return {'method': app.metoda}
