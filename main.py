@@ -5,8 +5,6 @@ from fastapi import FastAPI
 
 from pydantic import BaseModel
 
-class MethodRequest(BaseModel):
-    method: str
 
 metoda = ''
 
@@ -18,19 +16,25 @@ def root():
     metoda = 'GET'
     return {"message": "Hello World during the coronavirus pandemic!"}
 
-class GiveMeSomethingRq(BaseModel):
-    first_key: str
-    constant_data: str = "POST"
+# class GiveMeSomethingRq(BaseModel):
+#     first_key: str
+#     constant_data: str = "POST"
 
-class GiveMeSomethingResp(BaseModel):
-    received: dict
-    constant_data: str = "POST"
+# class GiveMeSomethingResp(BaseModel):
+#     received: dict
+#     constant_data: str = "POST"
 
-@app.post("/", response_model=GiveMeSomethingResp)
-def receive_something(rq: GiveMeSomethingRq):
+# @app.post("/", response_model=GiveMeSomethingResp)
+# def receive_something(rq: GiveMeSomethingRq):
+#     global metoda
+#     metoda = 'POST'
+#     return GiveMeSomethingResp(received=rq.dict())
+
+@app.post("/")
+def read_post():
     global metoda
     metoda = 'POST'
-    return GiveMeSomethingResp(received=rq.dict())
+    return {"message": " pandemic!"}
 
 @app.get('/method')
 def read_method():
