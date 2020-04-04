@@ -37,5 +37,5 @@ def read_post():
     return {"message": " pandemic!"}
 
 @app.get('/method')
-def read_method():
+async def read_method():
     return {'method': metoda}
