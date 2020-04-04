@@ -9,6 +9,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
+	app.metoda = 'GET'
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 class GiveMeSomethingRq(BaseModel):
@@ -21,10 +22,11 @@ class GiveMeSomethingResp(BaseModel):
 
 @app.post("/", response_model=GiveMeSomethingResp)
 def receive_something(rq: GiveMeSomethingRq):
+	app.metoda = 'POST'
 	return GiveMeSomethingResp(received=rq.dict())
 
 
 
 @app.get("/method")
-def read_method(rq: GiveMeSomethingRq):
-   return {"method": rq.constant_data}
+def read_method():
+   return {"method": app.metoda}
