@@ -34,4 +34,4 @@ def receive_something(rq: GiveMeSomethingRq):
 
 @app.get('/method')
 def read_method():
-    return {'message': metoda}
+    return {'method': metoda}
