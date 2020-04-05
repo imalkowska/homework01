@@ -58,7 +58,9 @@ def patient_post(rq: GiveMeSomethingRq):
 
 @app.get("/patient/{pk}", response_model=GiveMeSomethingRq)
 def patient_get(pk: int):
-	return GiveMeSomethingRq(app.patients[pk])
+    if app.counter<pk:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return GiveMeSomethingRq(app.patients[pk])
 
 
 
