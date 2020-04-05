@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-app.counter = 0
+app.counter = -1
 
 app.patients = []
 
@@ -48,8 +48,8 @@ class GiveMeSomethingResp(BaseModel):
 
 @app.post("/patient", response_model=GiveMeSomethingResp)
 def patient_post(rq: GiveMeSomethingRq):
-    n = app.counter
     app.counter += 1
+    n = app.counter
     app.patients.append(rq.dict())
     return GiveMeSomethingResp(id=n, patient=rq.dict())
 
