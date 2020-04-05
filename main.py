@@ -56,7 +56,6 @@ def patient_post(rq: GiveMeSomethingRq):
 
 # Zadanie 4
 
-# @app.get("/patient/{pk}", response_model=GiveMeSomethingRq)
 @app.get("/patient/{pk}")
 def patient_get(pk: int):
     if app.counter<pk:
