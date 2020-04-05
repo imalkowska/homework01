@@ -10,6 +10,8 @@ app = FastAPI()
 
 app.counter = 0
 
+app.patients = []
+
 # Zadanie 1
 
 @app.get("/")
@@ -45,36 +47,19 @@ class GiveMeSomethingResp(BaseModel):
     patient: dict
 
 @app.post("/patient", response_model=GiveMeSomethingResp)
-def method_post(rq: GiveMeSomethingRq):
+def patient_post(rq: GiveMeSomethingRq):
     n = app.counter
     app.counter += 1
+    app.patients.append(rq.dict())
     return GiveMeSomethingResp(id=n, patient=rq.dict())
 
 
+# Zadanie 4
 
-# class GiveMeSomethingRq(BaseModel):
-#     first_key: str
-#     constant_data: str = "POST"
+@app.get("/patient/{pk}", response_model=GiveMeSomethingRq)
+def patient_get(pk: int):
+	return GiveMeSomethingRq(app.patients[pk])
 
-# class GiveMeSomethingResp(BaseModel):
-#     received: dict
-#     constant_data: str = "POST"
 
-# @app.post("/", response_model=GiveMeSomethingResp)
-# def receive_something(rq: GiveMeSomethingRq):
-#     global metoda
-#     metoda = 'POST'
-#     return GiveMeSomethingResp(received=rq.dict())
 
-# @app.post("/", response_model=Metoda)
-# def read_post(metoda: Metoda):
-# 	metoda.method = 'POST'
-#     return {"message": " pandemic!"}
 
-# @app.get('/method')
-# def read_method():
-#     return {'method': app.metoda}
-
-# @app.get('/method', response_model=Metoda)
-# def update_method():
-#     return {'method': 'POST'}
