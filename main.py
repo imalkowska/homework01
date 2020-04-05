@@ -51,7 +51,8 @@ class GiveMeSomethingResp(BaseModel):
 
 @app.post("/patient", response_model=GiveMeSomethingResp)
 def method_post(rq: GiveMeSomethingRq):
-    n = app.get('/counter')
+    n = app.counter
+    app.counter += 1
     return GiveMeSomethingResp(id=n, patient=rq.dict())
 
 
