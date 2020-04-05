@@ -36,11 +36,6 @@ def method_delete():
 
 # Zadanie 3
 
-@app.get('/counter')
-def counter():
-    app.counter += 1
-    return str(app.counter)
-
 class GiveMeSomethingRq(BaseModel):
     name: str
     surename: str
