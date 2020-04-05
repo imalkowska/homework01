@@ -5,16 +5,18 @@ from fastapi import FastAPI
 
 from pydantic import BaseModel
 
-class Metoda(BaseModel):
-    method: str
 
 app = FastAPI()
 
+app.counter = 0
+
+# Zadanie 1
 
 @app.get("/")
 def root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
+# Zadanie 2
 
 @app.get("/method")
 def method_get():
@@ -31,6 +33,26 @@ def method_put():
 @app.delete("/method")
 def method_delete():
     return {"method": "DELETE"}
+
+# Zadanie 3
+
+@app.get('/counter')
+def counter():
+    app.counter += 1
+    return str(app.counter)
+
+class GiveMeSomethingRq(BaseModel):
+    name: str
+    surename: str
+
+class GiveMeSomethingResp(BaseModel):
+    id: int
+    patient: dict
+
+@app.post("/patient", response_model=GiveMeSomethingResp)
+def method_post(rq: GiveMeSomethingRq):
+    n = app.get('/counter')
+    return GiveMeSomethingResp(id=n, patient=rq.dict())
 
 
 
