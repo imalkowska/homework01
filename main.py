@@ -65,4 +65,18 @@ def patient_get(pk: int):
 
 
 
+# PRACA DOMOWA NR 3
+
+# Zadanie 1
+
+
+@app.get("/welcome")
+def powitanie():
+    return {"message": "Hello My Friend"}
+
+
+@app.get("/")
+def powitanie2():
+    return {"message": "Hello Everybody"}
+
 
