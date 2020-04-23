@@ -1,9 +1,12 @@
 
 # main.py
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response, Cookie
 
 from pydantic import BaseModel
+
+from hashlib import sha256
+
 
 
 app = FastAPI()
@@ -80,3 +83,19 @@ def powitanie2():
     return {"message": "Hello Everybody"}
 
 
+# Zadanie 2
+
+app.secret_key = "very constatn and random secret, best 64 characters"
+
+@app.post("/login/")
+def create_cookie(user: str, password: str, response: Response):
+    session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
+    response.set_cookie(key="session_token", value=session_token)
+    return {"message": "Welcome"}
+
+
+# @app.get("/data/")
+# def create_cookie(*, response: Response, session_token: str = Cookie(None)):
+#     if session_token not in Database......... :
+#         raise HTTPException(status_code=403, detail="Unathorised")
+#     response.set_cookie(key="session_token", value=session_token)
