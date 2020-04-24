@@ -5,8 +5,9 @@ from fastapi import FastAPI, HTTPException, Response, Cookie
 
 from pydantic import BaseModel
 
-from hashlib import sha256
+import base64
 
+from fastapi.responses import RedirectResponse
 
 
 app = FastAPI()
@@ -17,9 +18,9 @@ app.patients = []
 
 # Zadanie 1
 
-@app.get("/")
-def root():
-    return {"message": "Hello World during the coronavirus pandemic!"}
+# @app.get("/")
+# def root():
+#     return {"message": "Hello World during the coronavirus pandemic!"}
 
 # Zadanie 2
 
@@ -73,6 +74,15 @@ def patient_get(pk: int):
 # Zadanie 1
 
 
+# def sprawdz_sesje(sesja: str):
+# 	def wrapp(funkcja):
+# 		if sesja != 'aaaa':
+# 			raise HTTPException(status_code=403, detail="Unathorised")
+# 		return funkcja
+# 	return wrapp
+
+
+
 @app.get("/welcome")
 def powitanie():
     return {"message": "Hello My Friend"}
@@ -85,13 +95,26 @@ def powitanie2():
 
 # Zadanie 2
 
-app.secret_key = "very constatn and random secret, best 64 characters"
+login = 'trudnY'
+haslo = 'PaC13Nt'
+
+app.secret_key = "abcdefgh"
 
 @app.post("/login/")
 def create_cookie(user: str, password: str, response: Response):
-    session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
-    response.set_cookie(key="session_token", value=session_token)
-    return {"message": "Welcome"}
+	secret = (f'{user}{password}{app.secret_key}')
+
+	session_token = base64.b64encode(bytes(secret, "ascii"))
+	response.set_cookie(key="session_token", value=session_token)
+	if user==login and password==haslo:
+		# return {"message": "good"}
+		return RedirectResponse(url = "/welcome")
+	else:
+		raise HTTPException(status_code=403, detail="Unathorised")
+    # session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
+    # session_token = base64.b64encode(bytes(f"{user}{password}{app.secret_key}"))
+    # response.set_cookie(key="session_token", value=session_token)
+    # return {"message": "Dziala"}
 
 
 # @app.get("/data/")
