@@ -144,6 +144,8 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
 def powitanie(request: Request, session_token: str = Cookie(None)):
     session_token = session_token[2:-1]
 
+    if app.sesje == []:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     if session_token not in app.sesje:
         raise HTTPException(status_code=401, detail="Unauthorized")        
 
