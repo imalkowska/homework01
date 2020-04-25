@@ -116,7 +116,7 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
         print('hej')
         return response
     else:
-        raise HTTPException(status_code=403, detail="Unathorised")
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 
