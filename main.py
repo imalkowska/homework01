@@ -179,19 +179,17 @@ def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str =
     app.counter += 1
     n = app.counter
 
-    res = GiveMeSomethingResp(id = n, patient = rq.dict())
-
-    app.patients.append(res)
+    app.patients.append(rq.dict())
 
     response.headers["Location"] = "/patient/"+str(n)
     response.status_code = 307
 
-    return res.patient
+    return rq.dict()
 
 @app.get('/patient')
 def patient_all(session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)
-    return app.patients
+    return { 'id_'+str(i) : app.patients[i] for i in range(0, len(app.patients) ) }
 
 
 
