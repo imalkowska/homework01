@@ -18,6 +18,8 @@ app.counter = -1
 
 app.patients = []
 
+app.sesje = []
+
 # Zadanie 1
 
 # @app.get("/")
@@ -52,8 +54,13 @@ class GiveMeSomethingResp(BaseModel):
     id: int
     patient: dict
 
+
 @app.post("/patient", response_model=GiveMeSomethingResp)
-def patient_post(rq: GiveMeSomethingRq):
+def patient_post(rq: GiveMeSomethingRq,response: Response, session_token: str = Cookie(None)):
+    if session_token not in app.sesje:
+        response.headers["Location"] = "/"
+        response.status_code = 307
+        return response
     app.counter += 1
     n = app.counter
     app.patients.append(rq.dict())
@@ -107,15 +114,32 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
     login = credentials.username
     password = credentials.password
     secret = (f'{login}{password}{app.secret_key}')
-
     session_token = base64.b64encode(bytes(secret, "ascii"))
     response.set_cookie(key="session_token", value=session_token)
     if login==app.login and password==app.haslo:
+        app.sesje.append(session_token)
         response.headers["Location"] = "/welcome"
         response.status_code = 307
         return response
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+
+# zadanie 3
+
+@app.post("/logout")
+def wyloguj(response: Response, session_token: str = Cookie(None)):
+    if session_token in app.sesje:
+        app.sesje.remove(session_token)
+        response.headers["Location"] = "/"
+        response.status_code = 307
+        return response
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+
 
 
 
