@@ -181,7 +181,7 @@ def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str =
 
     app.patients.append(rq.dict())
 
-    response.headers["Location"] = "/patient/"+str(n)
+    response.headers["Location"] = "/patient/"+str(n-1)
     response.status_code = 307
 
     return rq.dict()
