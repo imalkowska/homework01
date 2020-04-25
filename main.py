@@ -19,7 +19,7 @@ app = FastAPI()
 
 app.counter = 0
 
-app.patients = []
+app.patients = {}
 
 app.sesje = []
 
@@ -179,7 +179,7 @@ def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str =
     app.counter += 1
     n = app.counter
 
-    app.patients.append(rq.dict())
+    app.patients['id_'+str(n)] = rq.dict()
 
     response.headers["Location"] = "/patient/"+str(n)
     response.status_code = 307
@@ -189,7 +189,7 @@ def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str =
 @app.get('/patient')
 def patient_all(session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)
-    return { 'id_'+str(i+1) : app.patients[i] for i in range(0, len(app.patients) ) }
+    return app.patients
 
 
 
@@ -198,15 +198,15 @@ def patient_all(session_token: str = Cookie(None)):
 @app.get("/patient/{pk}")
 def patient_get(pk: int, session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)
-    if app.counter<pk:
+    if 'id_'+str(pk) not in app.patients:
         raise HTTPException(status_code=204, detail="No Content")
-    return app.patients[pk-1]
+    return app.patients['id_'+str(pk)]
 
 @app.delete("/patient/{pk}")
 def patient_delete(pk: int, session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)
-    if app.counter<pk:
+    if 'id_'+str(pk) not in app.patients:
         raise HTTPException(status_code=204, detail="No Content")
 
-    app.patients.remove(app.patients[pk-1])
+    del app.patients['id_'+str(pk)]
 
