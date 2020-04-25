@@ -198,7 +198,17 @@ def patient_all(session_token: str = Cookie(None)):
 
 
 @app.get("/patient/{pk}")
-def patient_get(pk: int):
+def patient_get(pk: int, session_token: str = Cookie(None)):
+    ok = czy_dostep(session_token)
     if app.counter<pk:
         raise HTTPException(status_code=204, detail="No Content")
-    return app.patients[pk]
+    return app.patients[pk-1]
+
+@app.delete("/patient/{pk}")
+def patient_delete(pk: int, session_token: str = Cookie(None)):
+    ok = czy_dostep(session_token)
+    if app.counter<pk:
+        raise HTTPException(status_code=204, detail="No Content")
+
+    app.patients.remove(app.patients[pk-1])
+
