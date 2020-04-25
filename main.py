@@ -140,9 +140,7 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
 
 # Zadanie 4 
 
-@app.get("/welcome")
-def powitanie(request: Request, session_token: str = Cookie(None)):
-    
+def czy_dostep(session_token: str):
     if session_token is None:
         raise HTTPException(status_code=401, detail="Unauthorized")
         
@@ -151,7 +149,14 @@ def powitanie(request: Request, session_token: str = Cookie(None)):
     if app.sesje == []:
         raise HTTPException(status_code=401, detail="Unauthorized")
     if session_token not in app.sesje:
-        raise HTTPException(status_code=401, detail="Unauthorized")        
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    return True
+
+@app.get("/welcome")
+def powitanie(request: Request, session_token: str = Cookie(None)):
+    
+    ok = czy_dostep(session_token)        
 
     return templates.TemplateResponse("item.html", {"request": request, 'user': app.login})
 
