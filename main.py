@@ -109,10 +109,12 @@ app.secret_key = "napis"
 def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     login = credentials.username
     password = credentials.password
-    secret = (f'{login}{password}{app.secret_key}')
-    session_token = base64.b64encode(bytes(secret, "ascii"))
-    response.set_cookie(key="session_token", value=session_token)
+
     if login==app.login and password==app.haslo:
+        secret = (f'{login}{password}{app.secret_key}')
+        session_token = base64.b64encode(bytes(secret, "ascii"))
+        response.set_cookie(key="session_token", value=session_token)
+
         app.sesje.append(session_token)
         response.headers["Location"] = "/welcome"
         response.status_code = 307
@@ -125,12 +127,12 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
 # zadanie 3
 
 @app.post("/logout")
-def wyloguj(response: Response, session_token: str = Cookie(None)):
-    if session_token in app.sesje:
-        app.sesje.remove(session_token)
+def wyloguj(response: Response):
+    if response.session_token in app.sesje:
+        app.sesje.remove(response.session_token)
         response.headers["Location"] = "/"
         response.status_code = 307
-        response.set_cookie(key="session_token", value=session_token)
+        response.set_cookie(key="session_token", value=response.session_token)
         return response
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
