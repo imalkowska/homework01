@@ -56,11 +56,7 @@ class GiveMeSomethingResp(BaseModel):
 
 
 @app.post("/patient", response_model=GiveMeSomethingResp)
-def patient_post(rq: GiveMeSomethingRq,response: Response, session_token: str = Cookie(None)):
-    if session_token not in app.sesje:
-        response.headers["Location"] = "/"
-        response.status_code = 307
-        return response
+def patient_post(rq: GiveMeSomethingRq):
     app.counter += 1
     n = app.counter
     app.patients.append(rq.dict())
@@ -134,6 +130,7 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
         app.sesje.remove(session_token)
         response.headers["Location"] = "/"
         response.status_code = 307
+        response.set_cookie(key="session_token", value=session_token)
         return response
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
