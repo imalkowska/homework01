@@ -211,5 +211,5 @@ def patient_delete(pk: int, session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)
     if 'id_'+str(pk) in app.patients:
         del app.patients['id_'+str(pk)]
-    else:
-        raise HTTPException(status_code=204, detail="No Content")
+
+    raise HTTPException(status_code=204, detail="No Content")
