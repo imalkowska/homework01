@@ -51,7 +51,7 @@ def method_delete():
 
 class GiveMeSomethingRq(BaseModel):
     name: str
-    surename: str
+    surname: str
 
 class GiveMeSomethingResp(BaseModel):
     id: int
