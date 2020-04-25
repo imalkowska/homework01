@@ -134,7 +134,7 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
         app.sesje.remove(session_token)
         response.headers["Location"] = "/"
         response.status_code = 307
-        response.set_cookie(key="session_token", value=session_token)
+        #response.set_cookie(key="session_token", value=session_token)
         # return response
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
