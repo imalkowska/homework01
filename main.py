@@ -17,7 +17,7 @@ security = HTTPBasic()
 
 app = FastAPI()
 
-app.counter = -1
+app.counter = 0
 
 app.patients = []
 
