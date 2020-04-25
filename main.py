@@ -142,6 +142,10 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
 
 @app.get("/welcome")
 def powitanie(request: Request, session_token: str = Cookie(None)):
+    
+    if session_token is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+        
     session_token = session_token[2:-1]
 
     if app.sesje == []:
