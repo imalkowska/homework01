@@ -108,7 +108,8 @@ def create_cookie(user: str, password: str, response: Response):
 	response.set_cookie(key="session_token", value=session_token)
 	if user==login and password==haslo:
 		# return {"message": "good"}
-		return RedirectResponse(url = "/welcome")
+		response = RedirectResponse(url = "/welcome")
+		return response
 	else:
 		raise HTTPException(status_code=403, detail="Unathorised")
     # session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
