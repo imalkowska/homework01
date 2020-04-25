@@ -107,19 +107,9 @@ def create_cookie(user: str, password: str, response: Response):
 	session_token = base64.b64encode(bytes(secret, "ascii"))
 	response.set_cookie(key="session_token", value=session_token)
 	if user==login and password==haslo:
-		# return {"message": "good"}
-		response = RedirectResponse(url = "/welcome")
-		return response
+		response.headers["Location"] = "/welcome"
 	else:
 		raise HTTPException(status_code=403, detail="Unathorised")
-    # session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
-    # session_token = base64.b64encode(bytes(f"{user}{password}{app.secret_key}"))
-    # response.set_cookie(key="session_token", value=session_token)
-    # return {"message": "Dziala"}
 
 
-# @app.get("/data/")
-# def create_cookie(*, response: Response, session_token: str = Cookie(None)):
-#     if session_token not in Database......... :
-#         raise HTTPException(status_code=403, detail="Unathorised")
-#     response.set_cookie(key="session_token", value=session_token)
+
