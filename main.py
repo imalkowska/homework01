@@ -118,7 +118,7 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
         session_token = base64.b64encode(bytes(secret, 'ascii'))
         response.set_cookie(key="session_token", value=session_token)
 
-        app.sesje.append(session_token)
+        app.sesje.append(str(session_token)[2:-1])
 
         response.headers["Location"] = "/welcome"
         response.status_code = 307
@@ -133,6 +133,7 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
 @app.post("/logout")
 def wyloguj(response: Response, session_token: str = Cookie(None)):
     session_token = session_token[2:-1]
+
     if session_token in app.sesje:
         app.sesje.remove(session_token)
         response.headers["Location"] = "/"
