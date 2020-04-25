@@ -1,7 +1,7 @@
 
 # main.py
 
-from fastapi import FastAPI, Depends, HTTPException, Response, Cookie
+from fastapi import FastAPI, Depends, HTTPException, Response,Request, Cookie
 
 from pydantic import BaseModel
 
@@ -9,6 +9,9 @@ import base64
 
 from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
 
 security = HTTPBasic()
 
@@ -79,18 +82,9 @@ def patient_get(pk: int):
 # Zadanie 1
 
 
-# def sprawdz_sesje(sesja: str):
-# 	def wrapp(funkcja):
-# 		if sesja != 'aaaa':
-# 			raise HTTPException(status_code=403, detail="Unathorised")
-# 		return funkcja
-# 	return wrapp
-
-
-
-@app.get("/welcome")
-def powitanie():
-    return {"message": "Hello My Friend"}
+# @app.get("/welcome")
+# def powitanie():
+#     return {"message": "Hello My Friend"}
 
 
 @app.get("/")
@@ -106,7 +100,6 @@ app.haslo = 'PaC13Nt'
 app.secret_key = "napis"
 
 
-#@app.post("/login")
 @app.post('/login')
 def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
     login = credentials.username
@@ -114,7 +107,6 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
 
     if login==app.login and password==app.haslo:
         secret = (f'{login}{password}{app.secret_key}')
-        #session_token = base64.b64encode(bytes(secret, "ascii"))
         session_token = base64.b64encode(bytes(secret, 'ascii'))
         response.set_cookie(key="session_token", value=session_token)
 
@@ -145,6 +137,17 @@ def wyloguj(response: Response, session_token: str = Cookie(None)):
 
 
 
+
+# Zadanie 4 
+
+@app.get("/welcome")
+def powitanie(request: Request, session_token: str = Cookie(None)):
+    session_token = session_token[2:-1]
+
+    if session_token not in app.sesje:
+        raise HTTPException(status_code=401, detail="Unauthorized")        
+
+    return templates.TemplateResponse("item.html", {"request": request, 'user': app.login})
 
 
 
