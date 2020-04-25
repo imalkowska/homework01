@@ -108,6 +108,7 @@ def create_cookie(user: str, password: str, response: Response):
 	response.set_cookie(key="session_token", value=session_token)
 	if user==login and password==haslo:
 		response.headers["Location"] = "/welcome"
+		return response
 	else:
 		raise HTTPException(status_code=403, detail="Unathorised")
 
