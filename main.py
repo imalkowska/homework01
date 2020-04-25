@@ -100,7 +100,7 @@ def powitanie2():
 app.login = 'trudnY'
 app.haslo = 'PaC13Nt'
 
-app.secret_key = "abcdefgh"
+app.secret_key = "napis"
 
 @app.post("/login")
 def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
@@ -113,7 +113,6 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
     if login==app.login and password==app.haslo:
         response.headers["Location"] = "/welcome"
         response.status_code = 307
-        print('hej')
         return response
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
