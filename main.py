@@ -1,14 +1,16 @@
 
 # main.py
 
-from fastapi import FastAPI, HTTPException, Response, Cookie
+from fastapi import FastAPI, Depends, HTTPException, Response, Cookie
 
 from pydantic import BaseModel
 
 import base64
 
 from fastapi.responses import RedirectResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+security = HTTPBasic()
 
 app = FastAPI()
 
@@ -100,18 +102,21 @@ app.haslo = 'PaC13Nt'
 
 app.secret_key = "abcdefgh"
 
-@app.post("/login/")
-def create_cookie(login: str, pass: str, response: Response):
-	secret = (f'{login}{pass}{app.secret_key}')
+@app.post("/login")
+def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    login = credentials.username
+    password = credentials.password
+    secret = (f'{login}{password}{app.secret_key}')
 
-	session_token = base64.b64encode(bytes(secret, "ascii"))
-	response.set_cookie(key="session_token", value=session_token)
-	if login==app.login and pass==app.haslo:
-		response.headers["Location"] = "/welcome"
-		response.status_code = 307
-		return response
-	else:
-		raise HTTPException(status_code=403, detail="Unathorised")
+    session_token = base64.b64encode(bytes(secret, "ascii"))
+    response.set_cookie(key="session_token", value=session_token)
+    if login==app.login and password==app.haslo:
+        response.headers["Location"] = "/welcome"
+        response.status_code = 307
+        print('hej')
+        return response
+    else:
+        raise HTTPException(status_code=403, detail="Unathorised")
 
 
 
