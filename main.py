@@ -95,8 +95,8 @@ def powitanie2():
 
 # Zadanie 2
 
-login = 'trudnY'
-haslo = 'PaC13Nt'
+app.login = 'trudnY'
+app.haslo = 'PaC13Nt'
 
 app.secret_key = "abcdefgh"
 
@@ -108,6 +108,7 @@ def create_cookie(user: str, password: str, response: Response):
 	response.set_cookie(key="session_token", value=session_token)
 	if user==login and password==haslo:
 		response.headers["Location"] = "/welcome"
+		response.status_code = 307
 		return response
 	else:
 		raise HTTPException(status_code=403, detail="Unathorised")
