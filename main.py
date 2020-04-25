@@ -58,21 +58,21 @@ class GiveMeSomethingResp(BaseModel):
     patient: dict
 
 
-@app.post("/patient", response_model=GiveMeSomethingResp)
-def patient_post(rq: GiveMeSomethingRq):
-    app.counter += 1
-    n = app.counter
-    app.patients.append(rq.dict())
-    return GiveMeSomethingResp(id=n, patient=rq.dict())
+# @app.post("/patient", response_model=GiveMeSomethingResp)
+# def patient_post(rq: GiveMeSomethingRq):
+#     app.counter += 1
+#     n = app.counter
+#     app.patients.append(rq.dict())
+#     return GiveMeSomethingResp(id=n, patient=rq.dict())
 
 
 # Zadanie 4
 
-@app.get("/patient/{pk}")
-def patient_get(pk: int):
-    if app.counter<pk:
-        raise HTTPException(status_code=204, detail="No Content")
-    return app.patients[pk]
+# @app.get("/patient/{pk}")
+# def patient_get(pk: int):
+#     if app.counter<pk:
+#         raise HTTPException(status_code=204, detail="No Content")
+#     return app.patients[pk]
 
 
 
@@ -153,6 +153,11 @@ def czy_dostep(session_token: str):
 
     return True
 
+
+
+
+
+
 @app.get("/welcome")
 def powitanie(request: Request, session_token: str = Cookie(None)):
     
@@ -162,3 +167,38 @@ def powitanie(request: Request, session_token: str = Cookie(None)):
 
 
 
+
+
+# Zadanie 5 
+
+
+
+@app.post("/patient")
+def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str = Cookie(None)):
+    ok = czy_dostep(session_token)     
+    app.counter += 1
+    n = app.counter
+
+    res = GiveMeSomethingResp(id = n, patient = rq.dict())
+
+    app.patients.append(res)
+
+    response.headers["Location"] = "/patient/"+str(n)
+    response.status_code = 307
+
+    return res.patient
+
+@app.get('/patient')
+def patient_all(session_token: str = Cookie(None)):
+    ok = czy_dostep(session_token)
+    return app.patients
+
+
+
+
+
+@app.get("/patient/{pk}")
+def patient_get(pk: int):
+    if app.counter<pk:
+        raise HTTPException(status_code=204, detail="No Content")
+    return app.patients[pk]
