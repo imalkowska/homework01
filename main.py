@@ -131,7 +131,7 @@ def create_cookie(response: Response, credentials: HTTPBasicCredentials = Depend
 @app.post("/logout")
 def wyloguj(response: Response, session_token: str = Cookie(None)):
 
-    return [app.sesje,session_token]
+#     return [app.sesje,session_token]
     session_token = base64.b64encode(bytes(secret, "ascii"))
     if session_token in app.sesje:
         app.sesje.remove(session_token)
