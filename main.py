@@ -76,6 +76,7 @@ class GiveMeSomethingResp(BaseModel):
 
 
 
+# --------------------------------------------------------------------------
 
 # PRACA DOMOWA NR 3
 
@@ -148,6 +149,7 @@ def czy_dostep(session_token: str):
 
     if app.sesje == []:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
     if session_token not in app.sesje:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
@@ -171,8 +173,6 @@ def powitanie(request: Request, session_token: str = Cookie(None)):
 
 # Zadanie 5 
 
-
-
 @app.post("/patient")
 def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str = Cookie(None)):
     ok = czy_dostep(session_token)     
@@ -185,6 +185,8 @@ def patient_post(rq: GiveMeSomethingRq, response: Response, session_token: str =
     response.status_code = 307
 
     return rq.dict()
+
+
 
 @app.get('/patient')
 def patient_all(session_token: str = Cookie(None)):
@@ -213,3 +215,6 @@ def patient_delete(pk: int, session_token: str = Cookie(None)):
         del app.patients['id_'+str(pk)]
 
     raise HTTPException(status_code=204, detail="No Content")
+
+
+    
